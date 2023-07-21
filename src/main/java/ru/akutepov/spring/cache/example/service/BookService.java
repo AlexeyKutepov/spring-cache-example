@@ -20,14 +20,14 @@ public class BookService {
     @Autowired
     private BookRepository repository;
 
-    @Cacheable("book")
+    @Cacheable(value = "book", unless = "#result == null")
     public Book findBookById(long id) {
         LOG.info("Calling getBookById...");
         Optional<Book> bookOptional = repository.findById(id);
         return bookOptional.orElse(null);
     }
 
-    @Cacheable(value = "book", key = "#title")
+    @Cacheable(value = "book", key = "#title", unless = "#result == null")
     public Book findBookByTitleAndAuthor(String title, String author) {
         LOG.info("Calling getBookById...");
         Optional<Book> bookOptional = repository.findBookByTitleAndAuthor(title, author);
