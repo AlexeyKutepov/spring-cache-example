@@ -52,6 +52,22 @@ class BookServiceTest {
     }
 
     @Test
+    void testFindBookByIdNullResult() {
+        final long bookId = 10L;
+
+        // первое обращение к сервису, в ответ возвращается null
+        Book book1 = service.findBookById(bookId);
+        assertNull(book1, "Book is found");
+
+        // второе обращение к сервису, в ответ возвращается null
+        Book book2 = service.findBookById(bookId);
+        assertNull(book2, "Book is found");
+
+        // так как значение null не кэшируется, то к БД будет 2 обращения
+        verify(repository, times(2)).findById(bookId);
+    }
+
+    @Test
     void testFindBookByTitleAndAuthor() {
         // первое обращение к сервису, получение данных из БД и кэширование
         Book book = service.findBookByTitleAndAuthor("Тихий дон", "М. А. Шолохов");
